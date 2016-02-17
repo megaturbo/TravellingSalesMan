@@ -36,6 +36,7 @@ class GUI:
                     pos = pygame.mouse.get_pos()
                     self.cities.append(City("c" + str(len(self.cities)), pos[0], pos[1]))
                     self.refresh()
+        return self.cities
 
     def refresh(self):
         self.screen.fill(0)
@@ -72,5 +73,49 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
                 cities.append(read_city(line))
 
 
+def handle_argv():
+    """
+    usage: JeanmonodRoulin.py [options] [parameters
+
+    options:
+    -n, --no-gui                Disable graphical user interface.
+
+    parameters:
+    -m VALUE, --maxtime=VALUE   Maximum execution time.
+    -f VALUE, --filename=VALUE  File containing city coords.
+
+    Jeanmonod Roulin"""
+
+    import getopt
+    opts = []
+    try:
+        opts = getopt.getopt(
+            sys.argv[1:],
+            "nm:f:",
+            ["no-gui", "maxtime=", "filename="])[0]
+    except getopt.GetoptError:
+        print(handle_argv.__doc__)
+        sys.exit(2)
+
+    show_gui = True
+    max_time = 0
+    filename = None
+
+    for opt, arg in opts:
+        if opt in ("-n", "--no-gui"):
+            show_gui = False
+        elif opt in ("-m", "--maxtime"):
+            max_time = int(arg)
+        elif opt in ("-f", "--filename"):
+            filename = str(arg)
+
+    return filename, show_gui, max_time
+
+
 if __name__ == '__main__':
-    ga_solve(None, True, 60)
+    """
+    Main
+    """
+    filename, show_gui, max_time = handle_argv()
+
+    ga_solve(filename, show_gui, max_time)
