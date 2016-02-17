@@ -3,8 +3,6 @@ import sys
 
 from pygame.constants import QUIT, K_RETURN, KEYDOWN, MOUSEBUTTONDOWN
 
-__author__ = 'Jeanmonod + Roulin'
-
 
 class GUI:
     base_name = "city"
