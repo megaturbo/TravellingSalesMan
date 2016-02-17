@@ -7,19 +7,21 @@ __author__ = 'Jeanmonod + Roulin'
 
 
 class GUI:
+    base_name = "city"
     screen_x = 500
     screen_y = 500
-    city_color = [10, 10, 200]  # blue
     city_radius = 3
-    font_color = [255, 255, 255]  # white
+    color_blue = [10, 200, 10]
+    color_grey = [200, 200, 200]
+    color_white = [255, 255, 255]
 
     def __init__(self):
         pygame.init()
         self.window = pygame.display.set_mode((GUI.screen_x, GUI.screen_y))
         pygame.display.set_caption('Travelling Salesman - Jeanmonod / Roulin')
         self.screen = pygame.display.get_surface()
-        self.font = pygame.font.Font(None, 30)
-        self.font_city_name = pygame.font.Font(None, 15)
+        self.font_big = pygame.font.Font(None, 30)
+        self.font_small = pygame.font.Font(None, 15)
         self.cities = []
 
     def show_user_input(self):
@@ -34,17 +36,21 @@ class GUI:
                     collecting = False
                 elif event.type == MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    self.cities.append(City("c" + str(len(self.cities)), pos[0], pos[1]))
+                    self.cities.append(City(GUI.base_name + str(len(self.cities)), pos[0], pos[1]))
                     self.refresh()
         return self.cities
 
     def refresh(self):
         self.screen.fill(0)
         for city in self.cities:
-            pygame.draw.circle(self.screen, self.city_color, (city.posx, city.posy), self.city_radius)
-            text_city_name = self.font_city_name.render(city.name, True, self.font_color)
-            self.screen.blit(text_city_name, (city.posx - 15, city.posy - 10))
-        text = self.font.render("Number: {}".format(len(self.cities)), True, self.font_color)
+            pygame.draw.circle(self.screen, self.color_blue, (city.posx, city.posy), self.city_radius)
+            text_city_name = self.font_small.render(city.name, True, self.color_white)
+            self.screen.blit(text_city_name, (city.posx - 15, city.posy - 20))
+
+        text = self.font_small.render("Press Enter when you're done.", True, self.color_grey)
+        self.screen.blit(text, (0, 490))
+
+        text = self.font_big.render("Number: {}".format(len(self.cities)), True, self.color_white)
         text_rect = text.get_rect()
         self.screen.blit(text, text_rect)
         pygame.display.flip()
