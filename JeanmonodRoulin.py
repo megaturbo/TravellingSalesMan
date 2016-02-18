@@ -118,6 +118,7 @@ def evolve(chromosomes, dists):
             cut2 = randint(cut1, len(newpop[i].genes) - 1)
             # TODO: maybe this? also, randint sucks
             newpop[i].genes = newpop[i].genes[:cut1] + newpop[i].genes[cut1:cut2:-1] + newpop[i].genes[cut2:]
+            print(len(newpop[i].genes))
     return newpop
 
 
