@@ -1,7 +1,9 @@
 import pygame
 import sys
+import math
 
 from pygame.constants import QUIT, K_RETURN, KEYDOWN, MOUSEBUTTONDOWN
+
 
 class GUI:
     base_name = "city"
@@ -54,10 +56,13 @@ class GUI:
 
 
 class City:
-    def __init__(self, name, posx, posy):
+    def __init__(self, name, x, y):
         self.name = name
-        self.posx = posx
-        self.posy = posy
+        self.x = x
+        self.y = y
+
+    def get_dist(self, other):
+        return math.hypot(self.x - other.x, self.y - other.y)
 
 
 def read_city(line):
@@ -94,9 +99,9 @@ def handle_argv():
     opts = []
     try:
         opts = getopt.getopt(
-            sys.argv[1:],
-            "nm:f:",
-            ["no-gui", "maxtime=", "filename="])[0]
+                sys.argv[1:],
+                "nm:f:",
+                ["no-gui", "maxtime=", "filename="])[0]
     except getopt.GetoptError:
         print(handle_argv.__doc__)
         sys.exit(2)
@@ -116,10 +121,12 @@ def handle_argv():
     return filename, show_gui, max_time
 
 
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+#                               "MAIN" FUNCTION                                #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
 if __name__ == '__main__':
-    """
-    Main
-    """
     filename, show_gui, max_time = handle_argv()
 
     ga_solve(filename, show_gui, max_time)
