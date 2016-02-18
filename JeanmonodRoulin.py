@@ -117,7 +117,8 @@ def evolve(chromosomes, dists):
             cut1 = randint(0, len(newpop[i].genes) - 2)
             cut2 = randint(cut1 + 1, len(newpop[i].genes) - 1)
             # TODO: maybe this? also, randint sucks
-            newpop[i] = Chromosome(newpop[i].genes[:cut1 - 1] + newpop[i].genes[cut1:cut2 - 1:-1] + newpop[i].genes[cut2:], dists)
+            newpop[i] = Chromosome(
+                newpop[i].genes[:cut1 - 1] + newpop[i].genes[cut1:cut2 - 1:-1] + newpop[i].genes[cut2:], dists)
     return newpop
 
 
@@ -147,8 +148,6 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     dists = create_matrix(cities)
 
     print('Now algorithming with {} cities'.format(len(cities)))
-
-    maxtime = 1  # REMOVE THIS
 
     population = [Chromosome([i for i in range(len(cities))], dists) for j in range(32)]
 
