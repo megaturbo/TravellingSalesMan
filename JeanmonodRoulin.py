@@ -85,10 +85,10 @@ class Chromosome:
 
 
 def evaluate(pop, dists):
-    eval = 0
+    evalu = 0
     for i in range(len(pop.genes) - 1):
-        eval += dists[pop.genes[i]][pop.genes[i + 1]]
-    return eval
+        evalu += dists[pop.genes[i]][pop.genes[i + 1]]
+    return evalu
 
 
 def crossover(father, mother):
@@ -115,7 +115,7 @@ def evolve(chromosomes, dists):
         if randint(0, 10) < 1:
             cut1 = randint(0, len(newpop[i].genes))
             cut2 = randint(cut1, len(newpop[i].genes))
-            newpop[i].genes = newpop[i].genes[:cut1] + newpop[i].genes[cut1:cut2:-1] + newpop[i].genes[cut2:]
+            newpop[i].genes = newpop[i].genes[:cut1-1] + newpop[i].genes[cut1:cut2-1:-1] + newpop[i].genes[cut2:]
     return newpop
 
 
