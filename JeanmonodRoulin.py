@@ -1,6 +1,7 @@
 import pygame
 import sys
 import math
+import numpy
 
 from pygame.constants import QUIT, K_RETURN, KEYDOWN, MOUSEBUTTONDOWN
 
@@ -72,9 +73,11 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         cities = gui.show_user_input()
     else:
         cities = read_cities(filename)
+    dists = create_matrix(cities)
 
     print('Now algorithming with {} cities'.format(len(cities)))
-    maxtime = 1
+
+    maxtime = 1 #REMOVE THIS
 
     # deciding which stop condition to use
     if maxtime == 0:
@@ -139,6 +142,15 @@ def handle_argv():
 #                                   UTILS                                      #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
+def create_matrix(cities):
+    l = len(cities)
+    dists = numpy.zeros((l, l))
+    for i in range(0, l):
+        for j in range(0, l):
+            dists[i][j] = cities[i].get_dist(cities[j])
+    return dists
+
+
 def read_cities(filename):
     with open(filename, 'r+') as file:
         return [read_city(line) for line in file.readlines()]
