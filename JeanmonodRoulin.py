@@ -42,9 +42,9 @@ class GUI:
     def refresh(self):
         self.screen.fill(0)
         for city in self.cities:
-            pygame.draw.circle(self.screen, self.color_blue, (city.posx, city.posy), self.city_radius)
+            pygame.draw.circle(self.screen, self.color_blue, (city.x, city.y), self.city_radius)
             text_city_name = self.font_small.render(city.name, True, self.color_white)
-            self.screen.blit(text_city_name, (city.posx - 15, city.posy - 20))
+            self.screen.blit(text_city_name, (city.x - 15, city.y - 20))
 
         text = self.font_small.render("Press Enter when you're done.", True, self.color_grey)
         self.screen.blit(text, (0, 490))
@@ -65,20 +65,13 @@ class City:
         return math.hypot(self.x - other.x, self.y - other.y)
 
 
-def read_city(line):
-    l = line.split(' ')
-    return City(l[0], int(l[1]), int(l[2]))
-
-
 def ga_solve(filename=None, show_gui=True, maxtime=0):
     cities = []
     if filename is None:
         gui = GUI()
         cities = gui.show_user_input()
     else:
-        with open(filename, 'r+') as file:
-            cities = [read_city(line) for line in file.readlines()]
-
+        cities = read_cities(filename)
     print(cities)
 
 
@@ -119,6 +112,21 @@ def handle_argv():
             filename = str(arg)
 
     return filename, show_gui, max_time
+
+
+# ---------------------------------------------------------------------------- #
+#                                                                              #
+#                                   UTILS                                      #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+def read_cities(filename):
+    with open(filename, 'r+') as file:
+        return [read_city(line) for line in file.readlines()]
+
+
+def read_city(line):
+    l = line.split(' ')
+    return City(l[0], int(l[1]), int(l[2]))
 
 
 # ---------------------------------------------------------------------------- #
