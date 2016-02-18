@@ -3,7 +3,6 @@ import sys
 
 from pygame.constants import QUIT, K_RETURN, KEYDOWN, MOUSEBUTTONDOWN
 
-
 class GUI:
     base_name = "city"
     screen_x = 500
@@ -73,7 +72,9 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         cities = gui.show_user_input()
     else:
         with open(filename, 'r+') as file:
-            cities = [read_city(line) for line in file.readLines()]
+            cities = [read_city(line) for line in file.readlines()]
+
+    print(cities)
 
 
 def handle_argv():
