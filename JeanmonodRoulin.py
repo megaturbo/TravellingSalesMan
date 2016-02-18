@@ -108,6 +108,7 @@ def evolve(chromosomes, dists):
         mother = newpop[i + 1].genes
         newpop[len(newpop):] = [Chromosome(crossover(father, mother), dists)]
         newpop[len(newpop):] = [Chromosome(crossover(mother, father), dists)]
+    print("jeez: {} vs {}".format(len(newpop), len(chromosomes)))
     assert (len(newpop) == len(chromosomes))  # DEBUG
     # mutation
     for i in xrange(len(newpop)):
