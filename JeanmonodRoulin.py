@@ -1,3 +1,5 @@
+from unittest.case import _AssertRaisesContext
+
 import pygame
 import sys
 import math
@@ -86,8 +88,23 @@ def evaluate(chromosome, dists):
 
 
 def evolve(chromosomes, dists):
-    # selection
     popsize = len(chromosomes)
+    # selection
+    newpop = wheelselect(chromosomes, dists, popsize)
+    # crossover
+    for i in xrange(0, len(newpop), 2):
+        cut = randint(len(newpop[i]))
+        newchrom = newpop[i][:cut]
+        newchrom[len(newchrom):] = [j for j in newpop[i + 1] if j not in newchrom]
+        assert(len(newchrom) == len(newpop[i]))  # DEBUG
+    # mutation
+    for i in newpop:
+        print()
+
+    return newpop
+
+
+def wheelselect(chromosomes, dists, popsize):
     average = 0
     for c in chromosomes:
         c.eval = evaluate(c, dists)
@@ -96,7 +113,7 @@ def evolve(chromosomes, dists):
     for c in chromosomes:
         c.chance = average / c.eval
     newpop = []
-    for i in range(popsize / 2):
+    for i in xrange(popsize / 2):
         newpop.append(chromosomes.pop(randint(len(chromosomes))))
     return newpop
 
@@ -114,7 +131,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
 
     maxtime = 1  # REMOVE THIS
 
-    population = [Chromosome([i for i in len(cities)]) for j in range(30)]
+    population = [Chromosome([i for i in len(cities)]) for j in range(32)]
 
     # deciding which stop condition to use
     if maxtime <= 0:
@@ -127,7 +144,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     stop = False
     while not stop:
         # critically thinking about evolution
-        # s
+
         # loop stop
         if stopcond == 0:
             stop = False
