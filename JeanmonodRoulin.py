@@ -72,7 +72,27 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         cities = gui.show_user_input()
     else:
         cities = read_cities(filename)
-    print(cities)
+
+    print('Now algorithming with {} cities'.format(len(cities)))
+    maxtime = 1
+
+    # deciding which stop condition to use
+    if maxtime == 0:
+        stopcond = 0
+    else:
+        from datetime import datetime
+        stopcond = 1
+        starttime = datetime.now()
+
+    stop = False
+    while not stop:
+        # critically thinking about evolution
+
+        # loop stop
+        if stopcond == 0:
+            stop = False
+        else:
+            stop = (datetime.now() - starttime).seconds > maxtime
 
 
 def handle_argv():
