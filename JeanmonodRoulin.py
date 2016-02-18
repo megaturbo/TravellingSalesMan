@@ -82,9 +82,11 @@ class Chromosome:
         self.genes = genes
 
 
-def evaluate(chromosome, dists):
-    # TODO: redo
-    return reduce(lambda x, y: dists[x][y], chromosome)
+def evaluate(pop, dists):
+    eval = 0
+    for i in range(len(pop) - 1):
+        eval += dists[pop[i]][pop[i + 1]]
+    return eval
 
 
 def evolve(chromosomes, dists):
@@ -97,10 +99,13 @@ def evolve(chromosomes, dists):
         newchrom = newpop[i][:cut]
         newchrom[len(newchrom):] = [j for j in newpop[i + 1] if j not in newchrom]
         assert(len(newchrom) == len(newpop[i]))  # DEBUG
+    assert(len(newpop) == len(chromosomes))  # DEBUG
     # mutation
-    for i in newpop:
-        print()
-
+    for i in xrange(len(newpop)):
+        if randint(10) < 1:
+            cut1 = randint(len(newpop[i]))
+            cut2 = randint(cut1, len(newpop[i]))
+            newpop[i] = newpop[:cut1] + newpop[cut1:cut2:-1] + newpop[cut2:]
     return newpop
 
 
@@ -144,7 +149,9 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     stop = False
     while not stop:
         # critically thinking about evolution
-
+        evolve(population, dists)
+        if gui:
+            gui.refresh()
         # loop stop
         if stopcond == 0:
             stop = False
