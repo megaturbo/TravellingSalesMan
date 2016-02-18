@@ -47,8 +47,9 @@ class GUI:
     def refresh(self):
         self.screen.fill(0)
 
-        for link in self.links:
-            pygame.draw.line(self.screen, self.color_blue, self.cities[link[0]].pos(), self.cities[link[1]].pos(), 1)
+        for i in range(len(self.links) - 1):
+            pygame.draw.line(self.screen, self.color_blue, self.cities[self.links[i]].pos(),
+                             self.cities[self.links[i + 1]].pos(), 1)
 
         for city in self.cities:
             pygame.draw.circle(self.screen, self.color_blue, (city.x, city.y), self.city_radius)
@@ -84,8 +85,8 @@ class Chromosome:
 
 def evaluate(pop, dists):
     eval = 0
-    for i in range(len(pop) - 1):
-        eval += dists[pop[i]][pop[i + 1]]
+    for i in range(len(pop.genes) - 1):
+        eval += dists[pop.genes[i]][pop.genes[i + 1]]
     return eval
 
 
@@ -95,17 +96,17 @@ def evolve(chromosomes, dists):
     newpop = wheelselect(chromosomes, dists, popsize)
     # crossover
     for i in xrange(0, len(newpop), 2):
-        cut = randint(len(newpop[i]))
-        newchrom = newpop[i][:cut]
-        newchrom[len(newchrom):] = [j for j in newpop[i + 1] if j not in newchrom]
-        assert(len(newchrom) == len(newpop[i]))  # DEBUG
-    assert(len(newpop) == len(chromosomes))  # DEBUG
+        cut = randint(0, len(newpop[i].genes))
+        newchrom = newpop[i].genes[:cut]
+        newchrom[len(newchrom):] = [j for j in newpop[i + 1].genes if j not in newchrom]
+        assert (len(newchrom) == len(newpop[i].genes))  # DEBUG
+    assert (len(newpop) == len(chromosomes))  # DEBUG
     # mutation
     for i in xrange(len(newpop)):
-        if randint(10) < 1:
-            cut1 = randint(len(newpop[i]))
-            cut2 = randint(cut1, len(newpop[i]))
-            newpop[i] = newpop[:cut1] + newpop[cut1:cut2:-1] + newpop[cut2:]
+        if randint(0, 10) < 1:
+            cut1 = randint(0, len(newpop[i].genes))
+            cut2 = randint(cut1, len(newpop[i].genes))
+            newpop[i].genes = newpop[i].genes[:cut1] + newpop[i].genes[cut1:cut2:-1] + newpop[i].genes[cut2:]
     return newpop
 
 
@@ -119,7 +120,7 @@ def wheelselect(chromosomes, dists, popsize):
         c.chance = average / c.eval
     newpop = []
     for i in xrange(popsize / 2):
-        newpop.append(chromosomes.pop(randint(len(chromosomes))))
+        newpop.append(chromosomes.pop(randint(0, len(chromosomes) - 1)))
     return newpop
 
 
@@ -136,7 +137,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
 
     maxtime = 1  # REMOVE THIS
 
-    population = [Chromosome([i for i in len(cities)]) for j in range(32)]
+    population = [Chromosome([i for i in range(len(cities))]) for j in range(32)]
 
     # deciding which stop condition to use
     if maxtime <= 0:
@@ -151,7 +152,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         # critically thinking about evolution
         evolve(population, dists)
         if gui:
-            gui.links = max(population, key=lambda c: c.eval)
+            gui.links = max(population, key=lambda c: c.eval).genes
             gui.refresh()
         # loop stop
         if stopcond == 0:
