@@ -131,6 +131,7 @@ def wheelselect(pop, popsize):
     for i in xrange(popsize / 2):
         # DEBUG dat dice throw
         newpop[len(newpop):] = [pop.pop(randint(0, len(pop) - 1))]
+    pop.extend(newpop)
     print('lenths: {} vs {}'.format(len(newpop), len(pop)))
     return newpop
 
