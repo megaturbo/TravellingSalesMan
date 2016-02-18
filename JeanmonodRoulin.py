@@ -102,6 +102,7 @@ def evolve(chromosomes, dists):
         newchrom[len(newchrom):] = [j for j in newpop[i + 1].genes if j not in newchrom]
         newpop[len(newpop):] = [Chromosome(newchrom, dists)]
         assert (len(newchrom) == len(newpop[i].genes))  # DEBUG
+    print("Yolo: {} vs {}".format(len(newpop), len(chromosomes)))
     assert (len(newpop) == len(chromosomes))  # DEBUG
     # mutation
     for i in xrange(len(newpop)):
