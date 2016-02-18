@@ -100,6 +100,7 @@ def crossover(father, mother):
 
 def evolve(chromosomes, dists):
     popsize = len(chromosomes)
+    print(popsize)
     # selection
     newpop = wheelselect(chromosomes, popsize)
     # crossover
