@@ -2,6 +2,7 @@ import pygame
 import sys
 import math
 import numpy
+from random import randint
 
 from pygame.constants import QUIT, K_RETURN, KEYDOWN, MOUSEBUTTONDOWN
 
@@ -66,6 +67,32 @@ class City:
         return math.hypot(self.x - other.x, self.y - other.y)
 
 
+class Chromosome:
+    def __init__(self, genes):
+        self.genes = genes
+
+
+def evaluate(chromosome, dists):
+    # TODO: redo
+    return reduce(lambda x, y: dists[x][y], chromosome)
+
+
+def evolve(chromosomes, dists):
+    # selection
+    popsize = len(chromosomes)
+    average = 0
+    for c in chromosomes:
+        c.eval = evaluate(c, dists)
+        average += c.eval
+    average /= popsize
+    for c in chromosomes:
+        c.chance = average / c.eval
+    newpop = []
+    for i in range(popsize / 2):
+        newpop.append(chromosomes.pop(randint(len(chromosomes))))
+    return newpop
+
+
 def ga_solve(filename=None, show_gui=True, maxtime=0):
     cities = []
     if filename is None:
@@ -77,7 +104,9 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
 
     print('Now algorithming with {} cities'.format(len(cities)))
 
-    maxtime = 1 #REMOVE THIS
+    maxtime = 1  # REMOVE THIS
+
+    population = [Chromosome([i for i in len(cities)]) for j in range(30)]
 
     # deciding which stop condition to use
     if maxtime <= 0:
