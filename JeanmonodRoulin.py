@@ -91,17 +91,23 @@ def evaluate(pop, dists):
     return eval
 
 
+def crossover(father, mother):
+    cut = randint(0, len(father))
+    newchrom = father[:cut]
+    newchrom[len(newchrom):] = [j for j in mother if j not in newchrom]
+    return newchrom
+
+
 def evolve(chromosomes, dists):
     popsize = len(chromosomes)
     # selection
     newpop = wheelselect(chromosomes, popsize)
     # crossover
     for i in xrange(0, len(newpop), 2):
-        cut = randint(0, len(newpop[i].genes))
-        newchrom = newpop[i].genes[:cut]
-        newchrom[len(newchrom):] = [j for j in newpop[i + 1].genes if j not in newchrom]
-        newpop[len(newpop):] = [Chromosome(newchrom, dists)]
-        assert (len(newchrom) == len(newpop[i].genes))  # DEBUG
+        father = newpop[i].genes
+        mother = newpop[i + 1].genes
+        newpop[len(newpop):] = [Chromosome(crossover(father, mother), dists)]
+        newpop[len(newpop):] = [Chromosome(crossover(mother, father), dists)]
     assert (len(newpop) == len(chromosomes))  # DEBUG
     # mutation
     for i in xrange(len(newpop)):
