@@ -5,6 +5,7 @@ import sys
 import math
 import numpy
 from random import randint
+import random
 
 from pygame.constants import QUIT, K_RETURN, KEYDOWN, MOUSEBUTTONDOWN
 
@@ -153,6 +154,8 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
 
     population = [Chromosome([i for i in range(len(cities))], dists) for j in range(32)]
 
+    for i in population:
+        random.shuffle(i.genes)
     # deciding which stop condition to use
     if maxtime <= 0:
         stopcond = 0
