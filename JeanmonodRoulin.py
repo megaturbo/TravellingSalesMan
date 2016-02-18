@@ -151,6 +151,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         # critically thinking about evolution
         evolve(population, dists)
         if gui:
+            gui.links = max(population, key=lambda c: c.eval)
             gui.refresh()
         # loop stop
         if stopcond == 0:
