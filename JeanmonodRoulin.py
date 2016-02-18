@@ -127,7 +127,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     stop = False
     while not stop:
         # critically thinking about evolution
-
+        # s
         # loop stop
         if stopcond == 0:
             stop = False
