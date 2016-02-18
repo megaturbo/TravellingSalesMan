@@ -95,6 +95,7 @@ def crossover(father, mother):
     cut = randint(0, len(father) - 1)
     newchrom = father[:cut]
     newchrom[len(newchrom):] = [j for j in mother if j not in newchrom]
+    print(father, mother, newchrom)
     return newchrom
 
 
