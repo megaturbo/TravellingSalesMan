@@ -80,7 +80,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     maxtime = 1 #REMOVE THIS
 
     # deciding which stop condition to use
-    if maxtime == 0:
+    if maxtime <= 0:
         stopcond = 0
     else:
         from datetime import datetime
