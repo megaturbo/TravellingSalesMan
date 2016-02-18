@@ -94,7 +94,7 @@ def evaluate(pop, dists):
 def evolve(chromosomes, dists):
     popsize = len(chromosomes)
     # selection
-    newpop = wheelselect(chromosomes, dists, popsize)
+    newpop = wheelselect(chromosomes, popsize)
     # crossover
     for i in xrange(0, len(newpop), 2):
         cut = randint(0, len(newpop[i].genes))
@@ -112,16 +112,18 @@ def evolve(chromosomes, dists):
     return newpop
 
 
-def wheelselect(chromosomes, dists, popsize):
+def wheelselect(pop, popsize):
     average = 0
-    for c in chromosomes:
+    for c in pop:
         average += c.eval
     average /= popsize
-    for c in chromosomes:
+    for c in pop:
         c.chance = average / c.eval
     newpop = []
     for i in xrange(popsize / 2):
-        newpop.append(chromosomes.pop(randint(0, len(chromosomes) - 1)))
+        # DEBUG dat dice throw
+        newpop[len(newpop):] = pop.pop(randint(0, len(pop) - 1))
+    print('lenths: {} vs {}'.format(len(newpop), len(pop)))
     return newpop
 
 
