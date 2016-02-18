@@ -79,8 +79,9 @@ class City:
 
 
 class Chromosome:
-    def __init__(self, genes):
+    def __init__(self, genes, dists):
         self.genes = genes
+        self.eval = evaluate(self, dists)
 
 
 def evaluate(pop, dists):
@@ -99,6 +100,7 @@ def evolve(chromosomes, dists):
         cut = randint(0, len(newpop[i].genes))
         newchrom = newpop[i].genes[:cut]
         newchrom[len(newchrom):] = [j for j in newpop[i + 1].genes if j not in newchrom]
+        newpop[len(newpop):] = [Chromosome(newchrom, dists)]
         assert (len(newchrom) == len(newpop[i].genes))  # DEBUG
     assert (len(newpop) == len(chromosomes))  # DEBUG
     # mutation
@@ -113,7 +115,6 @@ def evolve(chromosomes, dists):
 def wheelselect(chromosomes, dists, popsize):
     average = 0
     for c in chromosomes:
-        c.eval = evaluate(c, dists)
         average += c.eval
     average /= popsize
     for c in chromosomes:
@@ -137,7 +138,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
 
     maxtime = 1  # REMOVE THIS
 
-    population = [Chromosome([i for i in range(len(cities))]) for j in range(32)]
+    population = [Chromosome([i for i in range(len(cities))], dists) for j in range(32)]
 
     # deciding which stop condition to use
     if maxtime <= 0:
@@ -150,7 +151,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     stop = False
     while not stop:
         # critically thinking about evolution
-        evolve(population, dists)
+        population = evolve(population, dists)
         if gui:
             gui.links = max(population, key=lambda c: c.eval).genes
             gui.refresh()
