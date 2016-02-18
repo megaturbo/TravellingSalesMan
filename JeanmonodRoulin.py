@@ -24,6 +24,7 @@ class GUI:
         self.font_big = pygame.font.Font(None, 30)
         self.font_small = pygame.font.Font(None, 15)
         self.cities = []
+        self.links = []
 
     def show_user_input(self):
         self.refresh()
@@ -43,6 +44,10 @@ class GUI:
 
     def refresh(self):
         self.screen.fill(0)
+
+        for link in self.links:
+            pygame.draw.line(self.screen, self.color_blue, self.cities[link[0]].pos(), self.cities[link[1]].pos(), 1)
+
         for city in self.cities:
             pygame.draw.circle(self.screen, self.color_blue, (city.x, city.y), self.city_radius)
             text_city_name = self.font_small.render(city.name, True, self.color_white)
@@ -62,6 +67,9 @@ class City:
         self.name = name
         self.x = x
         self.y = y
+
+    def pos(self):
+        return self.x, self.y
 
     def get_dist(self, other):
         return math.hypot(self.x - other.x, self.y - other.y)
