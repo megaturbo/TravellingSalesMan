@@ -114,9 +114,10 @@ def evolve(chromosomes, dists):
     # mutation
     for i in xrange(len(newpop)):
         if randint(0, 10) < 1:
-            cut1 = randint(0, len(newpop[i].genes))
-            cut2 = randint(cut1, len(newpop[i].genes))
-            newpop[i].genes = newpop[i].genes[:cut1-1] + newpop[i].genes[cut1:cut2-1:-1] + newpop[i].genes[cut2:]
+            cut1 = randint(0, len(newpop[i].genes) - 1)
+            cut2 = randint(cut1, len(newpop[i].genes) - 1)
+            # TODO: maybe this? also, randint sucks
+            newpop[i].genes = newpop[i].genes[:cut1] + newpop[i].genes[cut1:cut2:-1] + newpop[i].genes[cut2:]
     return newpop
 
 
