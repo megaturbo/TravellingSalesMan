@@ -92,7 +92,7 @@ def evaluate(pop, dists):
 
 
 def crossover(father, mother):
-    cut = randint(0, len(father))
+    cut = randint(0, len(father) - 1)
     newchrom = father[:cut]
     newchrom[len(newchrom):] = [j for j in mother if j not in newchrom]
     return newchrom
@@ -117,8 +117,7 @@ def evolve(chromosomes, dists):
             cut1 = randint(0, len(newpop[i].genes) - 1)
             cut2 = randint(cut1, len(newpop[i].genes) - 1)
             # TODO: maybe this? also, randint sucks
-            newpop[i].genes = newpop[i].genes[:cut1] + newpop[i].genes[cut1:cut2:-1] + newpop[i].genes[cut2:]
-            print(len(newpop[i].genes))
+            newpop[i] = Chromosome(newpop[i].genes[:cut1] + newpop[i].genes[cut1:cut2:-1] + newpop[i].genes[cut2:], dists)
     return newpop
 
 
