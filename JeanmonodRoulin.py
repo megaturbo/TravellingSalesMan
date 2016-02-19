@@ -119,8 +119,9 @@ def evolve(chromosomes, dists):
             # TODO: maybe this? also, randint sucks
             newchrome = Chromosome(newpop[i].genes[:cut1 - 1] + newpop[i].genes[cut1:cut2 - 1:-1] + newpop[i].genes[cut2:], dists)
             newpop[i] = newchrome
-            if len(newpop[i].genes) != len(newchrome.genes):
-                print(newchrome.genes, newpop[i].genes)
+            assert(len(newpop[i].genes) != len(newchrome.genes))
+            if len(newpop[i].genes) != len(newchrome):
+                print(newchrome, newpop[i].genes)
     return newpop
 
 
