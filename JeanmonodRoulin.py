@@ -114,21 +114,11 @@ def evolve(chromosomes, dists):
     # mutation
     for i in xrange(len(newpop)):
         if randint(0, 10) < 1:
-            cut1 = randint(0, len(newpop[i].genes) - 2)
+            cut1 = randint(1, len(newpop[i].genes) - 2)
             cut2 = randint(cut1 + 1, len(newpop[i].genes) - 1)
-            # TODO: maybe this? also, randint sucks
-            # newchrome = Chromosome(newpop[i].genes[:cut1 - 1] + newpop[i].genes[cut1:cut2 - 1:-1] + newpop[i].genes[cut2:], dists)
-            newchrome = []
-            for j in range(cut1):
-                newchrome = newpop[i].genes[j]
-            for j in range(cut1, cut2, -1):
-                newchrome = newpop[i].genes[j]
-            for j in range(cut2, len(newpop[i])):
-                newchrome = newpop[i].genes[j]
-            newpop[i] = newchrome
-            assert(len(newpop[i].genes) != len(newchrome.genes))
-            if len(newpop[i].genes) != len(newchrome):
-                print(newchrome, newpop[i].genes)
+            newchrome = newpop[i].genes[:cut1] + newpop[i].genes[cut2:cut1 - 1:-1] \
+                                               + newpop[i].genes[cut2 + 1:]
+            newpop[i] = Chromosome(newchrome, dists)
     return newpop
 
 
@@ -202,9 +192,9 @@ def handle_argv():
     opts = []
     try:
         opts = getopt.getopt(
-                sys.argv[1:],
-                "nm:f:",
-                ["no-gui", "maxtime=", "filename="])[0]
+            sys.argv[1:],
+            "nm:f:",
+            ["no-gui", "maxtime=", "filename="])[0]
     except getopt.GetoptError:
         print(handle_argv.__doc__)
         sys.exit(2)
