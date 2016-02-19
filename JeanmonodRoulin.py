@@ -117,8 +117,15 @@ def evolve(chromosomes, dists):
             cut1 = randint(0, len(newpop[i].genes) - 2)
             cut2 = randint(cut1 + 1, len(newpop[i].genes) - 1)
             # TODO: maybe this? also, randint sucks
-            newchrome = Chromosome(newpop[i].genes[:cut1 - 1] + newpop[i].genes[cut1:cut2 - 1:-1] + newpop[i].genes[cut2:], dists)
-            newpop[i] = newchrome
+            # newchrome = Chromosome(newpop[i].genes[:cut1 - 1] + newpop[i].genes[cut1:cut2 - 1:-1] + newpop[i].genes[cut2:], dists)
+            newchrome = []
+            for j in range(cut1):
+                newchrome = newpop[i].genes[j]
+            for j in range(cut1, cut2, -1):
+                newchrome = newpop[i].genes[j]
+            for j in range(cut2, len(newpop[i])):
+                newchrome = newpop[i].genes[j]
+            newpop[i] = newchromes
             assert(len(newpop[i].genes) != len(newchrome.genes))
             if len(newpop[i].genes) != len(newchrome):
                 print(newchrome, newpop[i].genes)
