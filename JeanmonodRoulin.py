@@ -125,7 +125,7 @@ def evolve(chromosomes, dists):
                 newchrome = newpop[i].genes[j]
             for j in range(cut2, len(newpop[i])):
                 newchrome = newpop[i].genes[j]
-            newpop[i] = newchromes
+            newpop[i] = newchrome
             assert(len(newpop[i].genes) != len(newchrome.genes))
             if len(newpop[i].genes) != len(newchrome):
                 print(newchrome, newpop[i].genes)
