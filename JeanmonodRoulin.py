@@ -159,8 +159,6 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
 
     print('Now algorithming with {} cities'.format(len(cities)))
 
-    maxtime = 1  # REMOVE THIS
-
     population = [Chromosome([i for i in range(len(cities))], dists) for j in range(32)]
 
     for i in population:
