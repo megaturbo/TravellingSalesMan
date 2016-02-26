@@ -190,6 +190,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
                 stop = False
         else:
             stop = (datetime.now() - starttime).seconds > maxtime
+    return evaluate(Chromosome(best), dists), best
 
 
 def handle_argv():
