@@ -168,6 +168,7 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     if maxtime <= 0:
         stopcond = 0
         c = 0
+        besteval = 123456789
     else:
         from datetime import datetime
         stopcond = 1
@@ -184,13 +185,13 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         # loop stop
         if stopcond == 0:
             c += 1
-            if c > 20:
-                stop = True
-            else:
-                stop = False
+            if best.eval < besteval:
+                c = 0
+                besteval = best.eval
+            stop = c > 500
         else:
             stop = (datetime.now() - starttime).seconds > maxtime
-    return evaluate(Chromosome(best), dists), best
+    return best.eval, best.genes
 
 
 def handle_argv():
