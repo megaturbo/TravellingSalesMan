@@ -1,5 +1,3 @@
-from unittest.case import _AssertRaisesContext
-
 import pygame
 import sys
 import math
@@ -98,19 +96,15 @@ def crossover(father, mother):
     return newchrom
 
 
-def evolve(chromosomes, dists):
-    popsize = len(chromosomes)
-    print(popsize)
+def evolve(population, dists):
     # selection
-    newpop = wheelselect(chromosomes, popsize)
+    newpop = wheelselection(population)
     # crossover
     for i in xrange(0, len(newpop), 2):
         father = newpop[i].genes
         mother = newpop[i + 1].genes
         newpop[len(newpop):] = [Chromosome(crossover(father, mother), dists)]
         newpop[len(newpop):] = [Chromosome(crossover(mother, father), dists)]
-    print("jeez: {} vs {}".format(len(newpop), len(chromosomes)))
-    assert (len(newpop) == len(chromosomes))  # DEBUG
     # mutation
     for i in xrange(len(newpop)):
         if randint(0, 10) < 1:
@@ -119,27 +113,43 @@ def evolve(chromosomes, dists):
             newchrome = newpop[i].genes[:cut1] + newpop[i].genes[cut2:cut1 - 1:-1] \
                                                + newpop[i].genes[cut2 + 1:]
             newpop[i] = Chromosome(newchrome, dists)
+    # diversification
+    for i in range(len(newpop)):
+        cut = randint(0, len(newpop[i].genes))
+        newpop[i] = Chromosome(newpop[i].genes[cut:] + newpop[i].genes[:cut], dists)
     return newpop
 
 
-def wheelselect(pop, popsize):
+def wheelselection(pop):
     average = 0
-    for c in pop:
-        average += c.eval
-    average /= popsize
-    for c in pop:
-        c.chance = average / c.eval
-    newpop = []
-    for i in xrange(popsize / 2):
-        # DEBUG dat dice throw
-        newpop[len(newpop):] = [pop.pop(randint(0, len(pop) - 1))]
+    newpop = [pop.pop(pop.index(min(pop, key=lambda c: c.eval)))]
+    for i in xrange(len(pop) / 2 - 1):
+        for c in pop:
+            average += c.eval
+        average /= len(pop)
+        totchance = 0
+        for c in pop:
+            c.chance = average / c.eval
+            totchance += c.chance
+        select = wheelselect([c.chance for c in pop])
+        newpop[len(newpop):] = [pop.pop(select)]
     pop.extend(newpop)
-    print('lenths: {} vs {}'.format(len(newpop), len(pop)))
     return newpop
+
+
+def wheelselect(weights):
+    weightsum = 0
+    for i in weights:
+        weightsum += i
+    value = random.random()
+    for i in xrange(len(weights)):
+        value -= weights[i]
+        if value <= 0:
+            return i
+    return -1
 
 
 def ga_solve(filename=None, show_gui=True, maxtime=0):
-    cities = []
     if filename is None:
         gui = GUI()
         cities = gui.show_user_input()
@@ -150,9 +160,10 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
     print('Now algorithming with {} cities'.format(len(cities)))
 
     population = [Chromosome([i for i in range(len(cities))], dists) for j in range(32)]
-
     for i in population:
         random.shuffle(i.genes)
+    best = min(population, key=lambda c: c.eval)
+
     # deciding which stop condition to use
     if maxtime <= 0:
         stopcond = 0
@@ -160,13 +171,14 @@ def ga_solve(filename=None, show_gui=True, maxtime=0):
         from datetime import datetime
         stopcond = 1
         starttime = datetime.now()
-
     stop = False
+
     while not stop:
         # critically thinking about evolution
         population = evolve(population, dists)
+        best = min(population + [best], key=lambda c: c.eval)
         if gui:
-            gui.links = max(population, key=lambda c: c.eval).genes
+            gui.links = best.genes
             gui.refresh()
         # loop stop
         if stopcond == 0:
@@ -189,7 +201,6 @@ def handle_argv():
     Jeanmonod Roulin"""
 
     import getopt
-    opts = []
     try:
         opts = getopt.getopt(
             sys.argv[1:],
